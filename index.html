@@ -152,6 +152,7 @@
   .cat{position:relative;display:block;aspect-ratio:3/4;border-radius:0;overflow:hidden;background:#cdbfa9;border:1px solid rgba(58,42,28,.25)}
   .cat-media{position:absolute;inset:0}
   .cat-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .cat-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .cat:not(.vid):hover .cat-media{transform:scale(1.05);transition:transform .6s ease}
   .cat::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(20,16,10,.42),transparent 46%)}
   .cat-label{position:absolute;left:0;right:0;bottom:13%;z-index:2;text-align:center;color:#fff;font-family:var(--serif);
@@ -506,16 +507,11 @@
       </a>
 
       <a href="#" class="cat">
-        <div class="cat-media hair-media">
-          <span class="lt"></span><span class="shelf"></span>
-          <span class="b b1"></span><span class="b b2"></span><span class="b b3"></span>
-        </div>
+        <img class="cat-media cat-img" src="Files/cream-static.jpg" alt="Cream" loading="lazy">
       </a>
 
       <a href="#" class="cat">
-        <div class="cat-media frag-media">
-          <span class="flask"></span><span class="sprig"></span>
-        </div>
+        <img class="cat-media cat-img" src="Files/roller-static.jpg" alt="Facial roller" loading="lazy">
       </a>
 
       <a href="#" class="cat vid">
