@@ -137,10 +137,13 @@
   .hero.paused .film,.hero.paused .studio-light,.hero.paused .sweep,.hero.paused .shimmer,.hero.paused .sun-bottle,.hero.paused .vbar span{animation-play-state:paused}
 
   .offer-pill{position:absolute;left:max(18px,6vw);bottom:60px;z-index:4;display:flex;align-items:center;gap:20px;background:var(--cream);
-    color:var(--forest);border:1px solid var(--line-l);border-radius:6px;padding:14px 18px;box-shadow:0 18px 40px -16px rgba(40,30,15,.5)}
-  .offer-pill span{font-family:var(--serif);font-size:1.2rem;letter-spacing:.01em}
-  .offer-pill button{font-size:1.25rem;line-height:1;color:var(--on-light-mute)}
+    color:var(--forest);border:1px solid var(--line-l);border-radius:6px;padding:14px 18px;box-shadow:0 18px 40px -16px rgba(40,30,15,.5);
+    text-decoration:none;animation:offerIn .6s cubic-bezier(.22,1,.36,1) .2s both}
+  .offer-pill .offer-txt{font-family:var(--serif);font-size:1.2rem;letter-spacing:.01em;color:var(--forest)}
+  .offer-pill .offer-x{font-size:1.25rem;line-height:1;color:var(--on-light-mute);cursor:pointer}
   .offer-pill.hide{display:none}
+  @keyframes offerIn{from{opacity:0;transform:translateX(-150%)}to{opacity:1;transform:translateX(0)}}
+  @media (prefers-reduced-motion:reduce){.offer-pill{animation:none}}
 
   /* ---------- category grid ---------- */
   .cats{background:var(--cream);padding-block:clamp(34px,5vw,64px)}
@@ -486,7 +489,10 @@
       <source src="Files/hero-film.mp4" type="video/mp4">
     </video>
 
-    <div class="offer-pill" id="offer"><span>Claim 15% off</span><button id="offerX" aria-label="Dismiss offer">&times;</button></div>
+    <a class="offer-pill" id="offer" href="#">
+      <span class="offer-txt">Claim 15% off</span>
+      <span class="offer-x" id="offerX" role="button" tabindex="0" aria-label="Dismiss offer">&times;</span>
+    </a>
   </section>
 
   <!-- CATEGORY GRID -->
@@ -730,7 +736,14 @@
   })();
 
   // dismiss offer pill
-  document.getElementById('offerX').addEventListener('click',()=>document.getElementById('offer').classList.add('hide'));
+  (function(){
+    var x = document.getElementById('offerX');
+    var pill = document.getElementById('offer');
+    if(!x || !pill) return;
+    function dismiss(e){ e.preventDefault(); e.stopPropagation(); pill.classList.add('hide'); }
+    x.addEventListener('click', dismiss);
+    x.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' ') dismiss(e); });
+  })();
 
   // rewards expand
   const rw=document.getElementById('rewards');
