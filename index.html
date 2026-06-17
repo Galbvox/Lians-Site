@@ -91,6 +91,7 @@
   /* ---------- hero video scene ---------- */
   .hero{position:relative;min-height:calc(100svh - var(--head-h) - var(--promo-h));overflow:hidden;color:var(--on-dark);
     background:linear-gradient(160deg,#cab4a1,#b2937e 55%,#9a7b66)}
+  .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
   .film{position:absolute;inset:0;animation:kenburns 20s ease-in-out infinite alternate;will-change:transform}
   @keyframes kenburns{from{transform:scale(1.05)}to{transform:scale(1.13)}}
   .studio-light{position:absolute;inset:-12%;animation:drift 16s ease-in-out infinite alternate;will-change:transform;
@@ -131,7 +132,7 @@
     font-size:.58rem;letter-spacing:.5px;background:rgba(0,0,0,.14);backdrop-filter:blur(4px)}
   .vplay:hover{background:rgba(0,0,0,.3)}
   .vbar{flex:1;height:2px;background:rgba(255,255,255,.28);border-radius:2px;overflow:hidden}
-  .vbar span{display:block;height:100%;width:0;background:#fff;animation:vprog 12s linear infinite}
+  .vbar span{display:block;height:100%;width:0;background:#fff}
   @keyframes vprog{from{width:0}to{width:100%}}
   .hero.paused .film,.hero.paused .studio-light,.hero.paused .sweep,.hero.paused .shimmer,.hero.paused .sun-bottle,.hero.paused .vbar span{animation-play-state:paused}
 
@@ -481,32 +482,9 @@
 
   <!-- HERO (cosmetic film) -->
   <section class="hero" id="hero" aria-label="Brand film">
-    <div class="film">
-      <div class="studio-light"></div>
-      <div class="stage">
-        <div class="bottle-row">
-          <div class="sun-bottle big">
-            <div class="cap"></div>
-            <div class="body">
-              <div class="gloss"></div>
-              <div class="sun-label"><span class="se">Lorem Ipsum Dolor</span><span class="sb">Lian Lahat</span><span class="sr"></span><span class="ss">Lorem ipsum sit</span></div>
-              <div class="shimmer"></div>
-            </div>
-            <div class="shadow"></div>
-          </div>
-          <div class="sun-bottle small">
-            <div class="cap"></div>
-            <div class="body">
-              <div class="gloss"></div>
-              <div class="sun-label"><span class="se">Dolor Amet</span><span class="sb">Lian Lahat</span><span class="sr"></span><span class="ss">Sit amet elit</span></div>
-              <div class="shimmer"></div>
-            </div>
-            <div class="shadow"></div>
-          </div>
-        </div>
-      </div>
-      <div class="grain"></div>
-    </div>
+    <video class="hero-video" id="heroVideo" autoplay loop muted playsinline preload="auto">
+      <source src="Files/hero-film.mp4" type="video/mp4">
+    </video>
     <div class="sweep"></div>
 
     <div class="offer-pill" id="offer"><span>Claim 15% off</span><button id="offerX" aria-label="Dismiss offer">&times;</button></div>
@@ -750,8 +728,27 @@
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
   // hero film play/pause
-  const hero=document.getElementById('hero'),vplay=document.getElementById('vplay');
-  vplay.addEventListener('click',()=>{const p=hero.classList.toggle('paused');vplay.textContent=p?'▶':'❚❚';vplay.setAttribute('aria-label',p?'Play film':'Pause film')});
+  (function(){
+    var v = document.getElementById('heroVideo');
+    var btn = document.getElementById('vplay');
+    var bar = document.querySelector('.vbar span');
+    if(!v) return;
+    v.muted = true;
+    v.play().catch(function(){});
+    if(btn){
+      btn.textContent = '❚❚';
+      btn.setAttribute('aria-label','Pause film');
+      btn.addEventListener('click', function(){
+        if(v.paused){ v.play(); btn.textContent='❚❚'; btn.setAttribute('aria-label','Pause film'); }
+        else { v.pause(); btn.textContent='▶'; btn.setAttribute('aria-label','Play film'); }
+      });
+    }
+    if(bar){
+      v.addEventListener('timeupdate', function(){
+        if(v.duration){ bar.style.width = (v.currentTime / v.duration * 100) + '%'; }
+      });
+    }
+  })();
 
   // dismiss offer pill
   document.getElementById('offerX').addEventListener('click',()=>document.getElementById('offer').classList.add('hide'));
