@@ -138,12 +138,13 @@
 
   .offer-pill{position:absolute;left:max(18px,6vw);bottom:60px;z-index:4;display:flex;align-items:center;gap:20px;background:var(--cream);
     color:var(--forest);border:1px solid var(--line-l);border-radius:6px;padding:14px 18px;box-shadow:0 18px 40px -16px rgba(40,30,15,.5);
-    text-decoration:none;animation:offerIn .6s cubic-bezier(.22,1,.36,1) .2s both}
+    text-decoration:none;opacity:0;transform:translateX(-150%)}
+  .offer-pill.in{animation:offerIn .85s cubic-bezier(.22,1,.36,1) both}
   .offer-pill .offer-txt{font-family:var(--serif);font-size:1.2rem;letter-spacing:.01em;color:var(--forest)}
   .offer-pill .offer-x{font-size:1.25rem;line-height:1;color:var(--on-light-mute);cursor:pointer}
   .offer-pill.hide{display:none}
   @keyframes offerIn{from{opacity:0;transform:translateX(-150%)}to{opacity:1;transform:translateX(0)}}
-  @media (prefers-reduced-motion:reduce){.offer-pill{animation:none}}
+  @media (prefers-reduced-motion:reduce){.offer-pill{opacity:1;transform:none}.offer-pill.in{animation:none}}
 
   /* ---------- category grid ---------- */
   .cats{background:var(--cream);padding-block:clamp(34px,5vw,64px)}
@@ -733,6 +734,20 @@
     if(!v) return;
     v.muted = true;
     v.play().catch(function(){});
+  })();
+
+  // reveal offer pill once the cover video starts playing
+  (function(){
+    var v = document.getElementById('heroVideo');
+    var pill = document.getElementById('offer');
+    if(!v || !pill) return;
+    var shown = false;
+    function showPill(){ if(shown) return; shown = true; pill.classList.add('in'); }
+    // reveal as soon as the cover video actually starts playing:
+    v.addEventListener('playing', showPill, { once:true });
+    // safety fallbacks so it can never stay hidden forever:
+    if(!v.paused && v.currentTime > 0) showPill();
+    setTimeout(showPill, 3000);
   })();
 
   // dismiss offer pill
