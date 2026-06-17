@@ -485,14 +485,8 @@
     <video class="hero-video" id="heroVideo" autoplay loop muted playsinline preload="auto">
       <source src="Files/hero-film.mp4" type="video/mp4">
     </video>
-    <div class="sweep"></div>
 
     <div class="offer-pill" id="offer"><span>Claim 15% off</span><button id="offerX" aria-label="Dismiss offer">&times;</button></div>
-
-    <div class="video-ui">
-      <button class="vplay" id="vplay" aria-label="Pause film">❚❚</button>
-      <div class="vbar"><span></span></div>
-    </div>
   </section>
 
   <!-- CATEGORY GRID -->
@@ -727,27 +721,12 @@
   const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.14});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  // hero film play/pause
+  // hero film autoplay
   (function(){
     var v = document.getElementById('heroVideo');
-    var btn = document.getElementById('vplay');
-    var bar = document.querySelector('.vbar span');
     if(!v) return;
     v.muted = true;
     v.play().catch(function(){});
-    if(btn){
-      btn.textContent = '❚❚';
-      btn.setAttribute('aria-label','Pause film');
-      btn.addEventListener('click', function(){
-        if(v.paused){ v.play(); btn.textContent='❚❚'; btn.setAttribute('aria-label','Pause film'); }
-        else { v.pause(); btn.textContent='▶'; btn.setAttribute('aria-label','Play film'); }
-      });
-    }
-    if(bar){
-      v.addEventListener('timeupdate', function(){
-        if(v.duration){ bar.style.width = (v.currentTime / v.duration * 100) + '%'; }
-      });
-    }
   })();
 
   // dismiss offer pill
